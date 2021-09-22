@@ -7,7 +7,14 @@ function App() {
   const [buyProducts, setBuyProducts] = useState([]);
 
   function addProduct(productData) {
+    console.log( productData )
     setBuyProducts([...buyProducts, productData]);
+  }
+
+  function deleteProduct(index) {
+    const updatedProducts = buyProducts;
+    updatedProducts.splice(index, 1)
+    setBuyProducts( [...updatedProducts] )
   }
 
   return (
@@ -23,6 +30,7 @@ function App() {
 
         <BuyList
           products={buyProducts}
+          onProductDelete={deleteProduct}
           />
 
         <div className="text-right font-semibold text-lg mt-4">
