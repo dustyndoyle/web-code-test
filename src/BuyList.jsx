@@ -26,7 +26,7 @@ const BuyList = (props) => (
           <input
             type="number"
             className="border border-gray-300 rounded w-24 text-lg px-2"
-            defaultValue={1}
+            value={product.quantity}
             min={1}
             onChange={(e) => props.onQuantityChange(e, index)}
             />

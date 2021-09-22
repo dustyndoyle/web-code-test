@@ -1,20 +1,24 @@
 import './App.css';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import StockProducts from './StockProducts.jsx';
 import BuyList from './BuyList';
 
 function App() {
   const [buyProducts, setBuyProducts] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   function addProduct(productData) {
     productData.quantity = Number(1);
     productData.totalPrice = Number(productData.price);
-    console.log( productData )
-    setBuyProducts([...buyProducts, productData]);
+
+    if( buyProducts.some((currentProduct) => currentProduct.itemNumber === productData.itemNumber ) === false ) {
+      setBuyProducts([...buyProducts, productData]);
+    }
   }
 
   function deleteProduct(index) {
     const updatedProducts = buyProducts;
+    
     updatedProducts.splice(index, 1)
     setBuyProducts( [...updatedProducts] )
   }
@@ -22,12 +26,24 @@ function App() {
   function quantityChange(e, index) {
     const selectedProduct = buyProducts[index];
     const updatedProducts = buyProducts;
+    
     selectedProduct.quantity = Number( e.target.value );
     selectedProduct.totalPrice = ( selectedProduct.price * Number( e.target.value ) );
+
     updatedProducts[index] = selectedProduct;
-    console.log( updatedProducts );
     setBuyProducts( [...updatedProducts] )
   }
+
+  function getTotalPrice() {
+    let totalPrice = 0;
+    buyProducts.map((product) => totalPrice = totalPrice + product.totalPrice);
+    
+    setTotalPrice( totalPrice );
+  }
+
+  useEffect( () => {
+    getTotalPrice();
+  });
 
   return (
     <div className="p-10 m-auto bg-blue-50 min-h-screen">
@@ -39,17 +55,20 @@ function App() {
         <StockProducts
           onProductAdd={addProduct}
           />
+        {buyProducts.length > 0 &&
+        <>
+          <BuyList
+            products={buyProducts}
+            onProductDelete={deleteProduct}
+            onQuantityChange={quantityChange}
+            />
+          <div className="text-right font-semibold text-lg mt-4">
+            Total:
+            <span className="text-xl ml-2">{(totalPrice).toLocaleString('en-US', {style: 'currency',currency: 'USD'})}</span>
+          </div>
+        </>
+        }
 
-        <BuyList
-          products={buyProducts}
-          onProductDelete={deleteProduct}
-          onQuantityChange={quantityChange}
-          />
-
-        <div className="text-right font-semibold text-lg mt-4">
-          Total:
-          <span className="text-xl ml-2">$0.00</span>
-        </div>
       </div>
     </div>
   );
