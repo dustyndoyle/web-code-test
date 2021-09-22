@@ -1,36 +1,32 @@
-const BuyList = () => (
+const BuyList = (props) => (
   <div className="mt-4">
     <h1 className="font-semibold text-2xl">Buy List</h1>
 
     <div className="border border-gray-200 p-4 rounded shadow mt-2 grid grid-cols-1 gap-y-4">
-      {/* 
-      ******************************
-      * TEMPLATE FOR BUY LIST ITEM *
-      ******************************
-      *
+      {props.products.map( (product) => (
       <div className="grid border border-gray-200 gap-x-4 rounded shadow p-4" style={{ gridTemplateColumns: "1fr 10fr 1fr 0fr 1fr 0fr 1fr 0fr"}}>
-        <img src="https://cdnimg.webstaurantstore.com/images/products/small/228802/1679695.jpg" alt="Refrigerator" className="p-2 rounded border border-gray-200" />
+        <img src={product.image} alt={product.name} className="p-2 rounded border border-gray-200" />
         <div className="flex flex-col flex-grow justify-center">
-          <h3 className="font-semibold text-lg">Refrigerator</h3>
+          <h3 className="font-semibold text-lg">{product.name}</h3>
           <p>
-            53" Black Sliding Glass Door Merchandiser Refrigerator with LED Lighting
+            {product.description}
           </p>
         </div>
 
         <div className="font-semibold text-lg text-red-500 flex items-center justify-end">
-          $1,949.00
+          {(product.price).toLocaleString('en-US', {style: 'currency',currency: 'USD'})}
         </div>
 
         <span className="flex items-center font-semibold">x</span>
 
         <div className="flex items-center justify-center">
-          <input type="number" className="border border-gray-300 rounded w-24 text-lg px-2" value={1} />
+          <input type="number" className="border border-gray-300 rounded w-24 text-lg px-2" defaultValue={1} min={1} />
         </div>
 
         <span className="flex items-center">=</span>
 
         <span className="flex items-center font-semibold text-green-500 text-xl">
-          $1,949.00
+          {(product.price).toLocaleString('en-US', {style: 'currency',currency: 'USD'})}
         </span>
 
         <div className="flex items-center justify-end">
@@ -40,7 +36,8 @@ const BuyList = () => (
             </svg>
           </button>
         </div>
-      </div> */}
+      </div>
+      ))}
     </div>
   </div>
 );
