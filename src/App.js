@@ -7,6 +7,8 @@ function App() {
   const [buyProducts, setBuyProducts] = useState([]);
 
   function addProduct(productData) {
+    productData.quantity = Number(1);
+    productData.totalPrice = Number(productData.price);
     console.log( productData )
     setBuyProducts([...buyProducts, productData]);
   }
@@ -14,6 +16,16 @@ function App() {
   function deleteProduct(index) {
     const updatedProducts = buyProducts;
     updatedProducts.splice(index, 1)
+    setBuyProducts( [...updatedProducts] )
+  }
+
+  function quantityChange(e, index) {
+    const selectedProduct = buyProducts[index];
+    const updatedProducts = buyProducts;
+    selectedProduct.quantity = Number( e.target.value );
+    selectedProduct.totalPrice = ( selectedProduct.price * Number( e.target.value ) );
+    updatedProducts[index] = selectedProduct;
+    console.log( updatedProducts );
     setBuyProducts( [...updatedProducts] )
   }
 
@@ -31,6 +43,7 @@ function App() {
         <BuyList
           products={buyProducts}
           onProductDelete={deleteProduct}
+          onQuantityChange={quantityChange}
           />
 
         <div className="text-right font-semibold text-lg mt-4">
