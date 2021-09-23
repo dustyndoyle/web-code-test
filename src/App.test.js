@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
+import StockProductsData from './data/stockProducts.json';
 
-test('renders learn react link', () => {
+test('app renders', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const appTitle = screen.getByText(/Restaurant Order System/i);
+  expect(appTitle).toBeInTheDocument();
 });
