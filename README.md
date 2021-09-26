@@ -1,4 +1,4 @@
-# Webstaurant JS Code Test
+# JS Code Test
 
 For the code test, you'll build a simple restaurant-esque product ordering application using React and React hooks. Provided is a UI skeleton of the application that you need to add all of the functionality to. These are the specs for the final product:
 
