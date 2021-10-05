@@ -1,49 +1,43 @@
 import './App.css';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import StockProducts from './StockProducts.jsx';
 import BuyList from './BuyList';
 
 function App() {
-  const [buyProducts, setBuyProducts] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [buyProducts, setBuyProducts] = useState({
+    'products': [],
+    'totalPrice': Number(0),
+  });
 
   function addProduct(productData) {
     productData.quantity = Number(1);
     productData.totalPrice = Number(productData.price);
 
-    if( buyProducts.some((currentProduct) => currentProduct.itemNumber === productData.itemNumber ) === false ) {
-      setBuyProducts([...buyProducts, productData]);
+    if( buyProducts.products.some((currentProduct) => currentProduct.itemNumber === productData.itemNumber ) === false ) {
+      buyProducts.products = [...buyProducts.products, productData]
+      buyProducts.totalPrice = getTotalPrice( buyProducts.products );
+      setBuyProducts({...buyProducts});
     }
   }
 
   function deleteProduct(index) {
-    const updatedProducts = buyProducts;
-    
-    updatedProducts.splice(index, 1)
-    setBuyProducts( [...updatedProducts] )
+    buyProducts.products.splice(index, 1)
+    setBuyProducts( {...buyProducts} )
   }
 
   function quantityChange(e, index) {
-    const selectedProduct = buyProducts[index];
-    const updatedProducts = buyProducts;
-    
-    selectedProduct.quantity = Number( e.target.value );
-    selectedProduct.totalPrice = ( selectedProduct.price * Number( e.target.value ) );
+    buyProducts.products[index].quantity = Number( e.target.value );
+    buyProducts.products[index].totalPrice = ( buyProducts.products[index].price * Number( e.target.value ) );
+    buyProducts.totalPrice = getTotalPrice( buyProducts.products );
 
-    updatedProducts[index] = selectedProduct;
-    setBuyProducts( [...updatedProducts] )
+    setBuyProducts( {...buyProducts} )
   }
 
-  function getTotalPrice() {
-    let totalPrice = 0;
-    buyProducts.map((product) => totalPrice = totalPrice + product.totalPrice);
+  function getTotalPrice(products) {
+    const totalPrice = products.reduce((totalPrice, product) => totalPrice = totalPrice + product.totalPrice, 0);
     
-    setTotalPrice( totalPrice );
+    return totalPrice;
   }
-
-  useEffect( () => {
-    getTotalPrice();
-  });
 
   return (
     <div className="p-10 m-auto bg-blue-50 min-h-screen">
@@ -55,16 +49,16 @@ function App() {
         <StockProducts
           onProductAdd={addProduct}
           />
-        {buyProducts.length > 0 &&
+        {buyProducts.products.length > 0 &&
         <>
           <BuyList
-            products={buyProducts}
+            products={buyProducts.products}
             onProductDelete={deleteProduct}
             onQuantityChange={quantityChange}
             />
           <div className="text-right font-semibold text-lg mt-4">
             Total:
-            <span className="text-xl ml-2">{(totalPrice).toLocaleString('en-US', {style: 'currency',currency: 'USD'})}</span>
+            <span className="text-xl ml-2">{(buyProducts.totalPrice).toLocaleString('en-US', {style: 'currency',currency: 'USD'})}</span>
           </div>
         </>
         }
